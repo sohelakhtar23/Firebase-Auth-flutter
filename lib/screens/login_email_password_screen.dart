@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_auth/services/firebase_auth_methods.dart';
+import 'package:flutter_firebase_auth/utils/showSnackbar.dart';
 import 'package:flutter_firebase_auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EmailPasswordLogin extends StatefulWidget {
   static String routeName = '/login-email-password';
@@ -17,12 +18,22 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
   }
-  
+
+  void loginUser() async {
+    try {
+      FirebaseAuthMethods(FirebaseAuth.instance).loginWithEmail(
+        context: context,
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.message!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +43,7 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
         children: [
           const Text(
             "Login",
-            style: TextStyle(fontSize: 30),
+            style: TextStyle(fontSize: 30)
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.08),
           Container(
@@ -52,7 +63,7 @@ class _EmailPasswordLoginState extends State<EmailPasswordLogin> {
           ),
           const SizedBox(height: 40),
           ElevatedButton(
-            onPressed: (){},
+            onPressed: loginUser,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.blue),
               textStyle: MaterialStateProperty.all(

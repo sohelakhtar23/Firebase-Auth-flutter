@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_auth/services/firebase_auth_methods.dart';
 import 'package:flutter_firebase_auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EmailPasswordSignup extends StatefulWidget {
   static String routeName = '/signup-email-password';
@@ -17,10 +17,17 @@ class _EmailPasswordSignupState extends State<EmailPasswordSignup> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  void signUpUser() async {
+    FirebaseAuthMethods(FirebaseAuth.instance).signUpWithEmail(
+      email: emailController.text,
+      password: passwordController.text,
+      context: context,
+    );
   }
 
   @override
@@ -51,7 +58,7 @@ class _EmailPasswordSignupState extends State<EmailPasswordSignup> {
           ),
           const SizedBox(height: 40),
           ElevatedButton(
-            onPressed: (){},
+            onPressed: signUpUser,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.blue),
               textStyle: MaterialStateProperty.all(
